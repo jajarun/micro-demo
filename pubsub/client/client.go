@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"github.com/asim/go-micro/plugins/registry/consul/v3"
 	"github.com/asim/go-micro/v3"
-	"github.com/go-micro/plugins/v3/broker/redis"
 	"github.com/google/uuid"
 	pubsub "microDemo/pubsub/proto"
 	"time"
 )
 
 func main() {
+
 	service := micro.NewService(
 		micro.Name("publisher"),
-		micro.Broker(redis.NewBroker()),
+		//micro.Broker(redis.NewBroker()),
 		micro.Registry(consul.NewRegistry()),
 	)
 	pub := micro.NewEvent("test:topic", service.Client())
