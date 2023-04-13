@@ -9,6 +9,13 @@ import (
 )
 
 func main() {
+	//reg := consul.NewRegistry()
+	//srvs, _ := reg.GetService("micro-rpc")
+	//for _, v := range srvs {
+	//	fmt.Println(v.Nodes[0])
+	//	fmt.Println(v.Nodes[1])
+	//}
+
 	client := rpcServer.NewGreeterService("micro-rpc", micro.NewService(
 		micro.Registry(consul.NewRegistry()),
 	).Client())
