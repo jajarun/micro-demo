@@ -33,8 +33,9 @@ func websocketHandler(c *gin.Context) {
 		log.Println(err)
 		return
 	}
-	defer conn.Close()
-	//userId := c.GetString("user_id")
+	defer func() {
+		_ = conn.Close()
+	}()
 	userId, ok := c.GetQuery("user_id")
 	if !ok {
 		log.Println("user_id 为空 关闭连接")
@@ -63,11 +64,6 @@ func websocketHandler(c *gin.Context) {
 		}
 		log.Println("read msg:" + string(msg))
 		go handleMessage(string(msg), userId)
-
-		//err = conn.WriteMessage(websocket.TextMessage, []byte("请再说一遍"))
-		//if err != nil {
-		//	log.Println("write msg err:", err)
-		//}
 	}
 }
 

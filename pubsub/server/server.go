@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/asim/go-micro/plugins/registry/consul/v3"
 	"github.com/asim/go-micro/v3"
+	"github.com/asim/go-micro/v3/metadata"
 	"github.com/asim/go-micro/v3/server"
-	"github.com/micro/go-micro/metadata"
 	pubsub "microDemo/pubsub/proto"
 )
 
