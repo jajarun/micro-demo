@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-micro/plugins/v3/broker/rabbitmq"
 	"log"
 	"time"
 
 	"github.com/asim/go-micro/v3/broker"
-	"github.com/go-micro/plugins/v3/broker/redis"
 )
 
 var (
@@ -33,9 +33,10 @@ func pub(redisBroker broker.Broker) {
 }
 
 func main() {
-	redisBroker := redis.NewBroker(
-		broker.Addrs("127.0.0.1:6379"),
-	)
+	redisBroker := rabbitmq.NewBroker()
+	//redisBroker := redis.NewBroker(
+	//	broker.Addrs("127.0.0.1:6379"),
+	//)
 	if err := redisBroker.Init(); err != nil {
 		log.Fatalf("Broker Init error: %v", err)
 	}

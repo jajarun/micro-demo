@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-micro/plugins/v3/broker/redis"
+	"github.com/go-micro/plugins/v3/broker/rabbitmq"
 	"log"
 
 	"github.com/asim/go-micro/v3/broker"
@@ -28,8 +28,9 @@ var (
 func sub(redisBroker broker.Broker) {
 	_, err := redisBroker.Subscribe(topic, func(p broker.Event) error {
 		fmt.Println("[sub] received message:", string(p.Message().Body), "header", p.Message().Header)
+		//_ = p.Ack()
 		return nil
-	})
+	}, broker.Queue("consumer"), broker.DisableAutoAck())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -37,8 +38,7 @@ func sub(redisBroker broker.Broker) {
 
 func main() {
 	cmd.Init()
-
-	redisBroker := redis.NewBroker()
+	redisBroker := rabbitmq.NewBroker()
 	if err := redisBroker.Init(); err != nil {
 		log.Fatalf("Broker Init error: %v", err)
 	}
