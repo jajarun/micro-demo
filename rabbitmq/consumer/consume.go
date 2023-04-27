@@ -94,12 +94,12 @@ func NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string) (
 
 	log.Printf("declared Exchange, declaring Queue %q", queueName)
 	queue, err := c.channel.QueueDeclare(
-		queueName, // name of the queue
-		true,      // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // noWait
-		nil,       // arguments
+		queueName,                         // name of the queue
+		true,                              // durable
+		false,                             // delete when unused
+		false,                             // exclusive
+		false,                             // noWait
+		amqp.Table{"x-message-ttl": 5000}, // arguments
 	)
 	if err != nil {
 		return nil, fmt.Errorf("Queue Declare: %s", err)
