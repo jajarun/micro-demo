@@ -80,7 +80,7 @@ func main() {
 
 	service := web.NewService(
 		web.Name("gin-server"),
-		web.Address("0.0.0.0:80"),
+		web.Address("0.0.0.0:8888"),
 		web.Handler(router),
 		//web.Registry(consul.NewRegistry()),
 	)
