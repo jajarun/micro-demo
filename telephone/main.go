@@ -32,12 +32,6 @@ func letterCombinations(digits string) []string {
 	return arr
 }
 
-func smallestRepunitDivByK(k int) int {
-	var v int
-
-	return v
-}
-
 func main() {
 	//arr := letterCombinations("2345")
 	//fmt.Println(arr)

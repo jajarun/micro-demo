@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/asim/go-micro/v3/logger"
 	"github.com/asim/go-micro/v3/web"
@@ -49,7 +50,13 @@ func websocketHandler(c *gin.Context) {
 		userCons[userId] = make(map[*websocket.Conn]bool)
 	}
 	userCons[userId][conn] = true
-	_ = conn.WriteMessage(websocket.TextMessage, []byte(userId+"连接成功"))
+	res := struct {
+		ErrCode int
+		UserId  int
+		Message string
+	}{0, 1, "链接成功"}
+	msg, _ := json.Marshal(res)
+	_ = conn.WriteMessage(websocket.TextMessage, msg)
 	log.Println(userId + "连接数" + strconv.Itoa(len(userCons[userId])))
 	conn.SetCloseHandler(func(code int, text string) error {
 		delete(userCons[userId], conn)
@@ -70,8 +77,35 @@ func websocketHandler(c *gin.Context) {
 	}
 }
 
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		//Access-Control-Allow-Credentials=true和Access-Control-Allow-Origin="*"有冲突
+		//故Access-Control-Allow-Origin需要指定具体得跨域origin
+		c.Header("Access-Control-Allow-Origin", "http://localhost:8081/")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "content-type")
+		c.Header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE")
+		//c.Header("Access-Control-Expose-Headers", "*")
+		if c.Request.Method == "OPTIONS" {
+			c.JSON(http.StatusOK, "")
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+func Auth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Next()
+	}
+}
+
 func main() {
 	router := gin.Default()
+	router.Use(Cors())
+	router.Use(Auth())
 
 	router.GET("/hello", func(c *gin.Context) {
 		logger.Info("Hello, world!")
@@ -80,11 +114,18 @@ func main() {
 		})
 	})
 
+	router.GET("/testApi", func(c *gin.Context) {
+		logger.Info("Hello, world!")
+		c.JSON(200, gin.H{
+			"data": "Hello, world!",
+		})
+	})
+
 	router.GET("/ws", websocketHandler)
 
 	service := web.NewService(
 		web.Name("gin-server"),
-		web.Address("0.0.0.0:15479"),
+		web.Address("0.0.0.0:8888"),
 		web.Handler(router),
 		//web.Registry(consul.NewRegistry()),
 	)
