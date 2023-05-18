@@ -27,4 +27,4 @@ message HelloReply {
 // 执行 protoc --go_out=. helloworld.proto 生成 helloworld.pb.go 文件
 // 执行 protoc --micro_out=. helloworld.proto  用micro插件生成 helloworld.pb.micro.go 文件
 
-//或者执行 protoc --go_out=. --go-grpc_out=. helloworld.proto
+//或者执行 protoc --go_out=. --micro_out=. helloworld.proto

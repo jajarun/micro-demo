@@ -82,6 +82,20 @@ func main() {
 
 	route := gin.Default()
 
+	group1 := route.Group("/group/")
+	{
+		group1.GET("test1", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"msg": "test1",
+			})
+		})
+		group1.GET("test2", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"msg": "test2",
+			})
+		})
+	}
+
 	route.POST("/user/login", login) //login 在Auth之前 所以不会进行登录认证
 
 	route.Use(Auth()) //中间件按顺序执行  该代码之前的路由不会执行该代码
